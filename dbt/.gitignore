@@ -2,6 +2,5 @@ target/
 logs/
 dbt_packages/
 *.duckdb
-*.duckdb.wal
 __pycache__/
 dbt_internal_packages/
