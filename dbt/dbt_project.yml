@@ -1,0 +1,28 @@
+name: "wheres-carmen-anthony"
+version: "1.0.0"
+
+profile: carmen-anthony
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+
+clean-targets: ["target", "dbt_packages"]
+
+seeds:
+  wheres-carmen-anthony:
+    +schema: raw
+    +quote_columns: true
+
+models:
+  wheres-carmen-anthony:
+    staging:
+      +materialized: view
+      +schema: staging
+    curated:
+      +materialized: table
+      +schema: dw
+    presentation:
+      +materialized: view
+      +schema: presentation
