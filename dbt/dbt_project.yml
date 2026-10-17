@@ -22,7 +22,7 @@ models:
       +schema: staging
     curated:
       +materialized: table
-      +schema: dw
-    presentation:
+      +schema: warehouse
+    analytics:
       +materialized: view
-      +schema: presentation
+      +schema: analytics

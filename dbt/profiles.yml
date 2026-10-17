@@ -4,5 +4,4 @@ carmen-anthony:
     dev:
       type: duckdb
       path: './wheres-carmen.duckdb'
-      schema: raw
       threads: 4
