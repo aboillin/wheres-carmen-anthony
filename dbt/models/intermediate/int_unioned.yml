@@ -1,0 +1,61 @@
+version: 2
+
+models:
+  - name: int_unioned
+    columns:
+      - name: sighting_id
+        description: "Unique primary key of dataset"
+        data_type: varchar 
+        data_tests: [unique,not_null]
+      - name: date_witness
+        description: "Date of witness sighting"
+        data_type: date
+        data_tests: [not_null]
+      - name: witness
+        description: "Name of witness sighting the perpetrator"
+        data_type: varchar
+        data_tests: [not_null]
+      - name: agent
+        description: "Name of field agent filing the report"
+        data_type: varchar
+        data_tests: [not_null]
+      - name: date_agent
+        description: "Date of field agent filing the report"
+        data_type: date
+        data_tests: [not_null]
+      - name: city_agent
+        description: "HQ city where field agent files the report"
+        data_type: varchar
+        data_tests: [not_null]
+      - name: country
+        description: "Country of sighting"
+        data_type: varchar
+        data_tests: [not_null]
+      - name: city
+        description: "City of sighting"
+        data_type: varchar
+        data_tests: [not_null]
+      - name: latitude
+        description: "Latitude of sighting"
+        data_type: double
+        data_tests: [not_null]
+      - name: longitude
+        description: "Longitude of sighting"
+        data_type: double
+        data_tests: [not_null]
+      - name: has_weapon
+        description: "Was the perpetrator observed to be armed?"
+        data_type: boolean
+        data_tests: [not_null]
+      - name: has_hat
+        description: "Was the perpetrator wearing a hat?"
+        data_type: boolean
+        data_tests: [not_null]
+      - name: has_jacket
+        description: "Was the perpetrator wearing a jacket?"
+        data_type: boolean
+        data_tests: [not_null]
+      - name: behavior
+        description: "Short description of perpetrator behavior"
+        data_type: varchar
+        data_tests: [not_null]

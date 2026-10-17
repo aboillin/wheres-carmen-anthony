@@ -1,0 +1,92 @@
+version: 2
+
+# Common data dictionary shared by every regional staging model.
+# dbt v2 requires reusable top-level YAML fragments to live under `anchors:`.
+anchors:
+  - &staging_model
+    columns:
+      - name: date_witness
+        description: "Date of witness sighting"
+        data_type: date
+        data_tests: [not_null]
+      - name: witness
+        description: "Name of witness sighting the perpetrator"
+        data_type: varchar
+        data_tests: [not_null]
+      - name: agent
+        description: "Name of field agent filing the report"
+        data_type: varchar
+        data_tests: [not_null]
+      - name: date_agent
+        description: "Date of field agent filing the report"
+        data_type: date
+        data_tests: [not_null]
+      - name: city_agent
+        description: "HQ city where field agent files the report"
+        data_type: varchar
+        data_tests: [not_null]
+      - name: country
+        description: "Country of sighting"
+        data_type: varchar
+        data_tests: [not_null]
+      - name: city
+        description: "City of sighting"
+        data_type: varchar
+        data_tests: [not_null]
+      - name: latitude
+        description: "Latitude of sighting"
+        data_type: double
+        data_tests: [not_null]
+      - name: longitude
+        description: "Longitude of sighting"
+        data_type: double
+        data_tests: [not_null]
+      - name: has_weapon
+        description: "Was the perpetrator observed to be armed?"
+        data_type: boolean
+        data_tests: [not_null]
+      - name: has_hat
+        description: "Was the perpetrator wearing a hat?"
+        data_type: boolean
+        data_tests: [not_null]
+      - name: has_jacket
+        description: "Was the perpetrator wearing a jacket?"
+        data_type: boolean
+        data_tests: [not_null]
+      - name: behavior
+        description: "Short description of perpetrator behavior"
+        data_type: varchar
+        data_tests: [not_null]
+
+models:
+  - name: stg_africa
+    <<: *staging_model
+    description: "AFRICA field reports mapped to the common data dictionary."
+
+  - name: stg_america
+    <<: *staging_model
+    description: "AMERICA field reports mapped to the common data dictionary."
+
+  - name: stg_asia
+    <<: *staging_model
+    description: "ASIA field reports mapped to the common data dictionary (Chinese column names translated)."
+
+  - name: stg_atlantic
+    <<: *staging_model
+    description: "ATLANTIC field reports mapped to the common data dictionary."
+
+  - name: stg_australia
+    <<: *staging_model
+    description: "AUSTRALIA field reports mapped to the common data dictionary."
+
+  - name: stg_europe
+    <<: *staging_model
+    description: "EUROPE field reports mapped to the common data dictionary."
+
+  - name: stg_indian
+    <<: *staging_model
+    description: "INDIAN field reports mapped to the common data dictionary."
+
+  - name: stg_pacific
+    <<: *staging_model
+    description: "PACIFIC field reports mapped to the common data dictionary."
