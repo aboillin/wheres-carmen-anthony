@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: ana_a_region_probability_by_month
+    description: "Q(a) support: probability of each agency region per calendar month (all years pooled, by witness date)."
+    columns:
+      - name: month_num
+        data_tests: [not_null]
+      - name: region_name
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [month_num, region_name]
+
+  - name: ana_a_most_likely_region_by_month
+    description: "Q(a): the most likely agency region for each calendar month."
+    columns:
+      - name: month_name
+        data_tests: [not_null]
+      - name: most_likely_region
+        data_tests: [not_null]
+
+  - name: ana_b_armed_jacket_no_hat_by_month
+    description: "Q(b): P(armed AND jacket AND NOT hat) per calendar month, with an 'All months' row and marginal probabilities."
+    columns:
+      - name: probability_armed_jacket_no_hat
+        description: "Count(armed & jacket & no hat) / count(sightings)."
+
+  - name: ana_c_top3_behaviors
+    description: "Q(c): the three most frequently observed behaviors."
+    columns:
+      - name: behavior_name
+        data_tests: [unique, not_null]
+
+  - name: ana_d_top3_behavior_probability_by_month
+    description: "Q(d): per calendar month, probability the observed behavior is one of the top three from Q(c)."
+    columns:
+      - name: month_num
+        data_tests: [unique, not_null]
