@@ -1,0 +1,161 @@
+version: 2
+
+models:
+  - name: dim_date
+    description: "Calendar days 1985-01-01 to 2022-12-31. Role-playing dimension: used for both the witness date and the agent filing date."
+    columns:
+      - name: date_skey
+        description: "Integer key in yyyymmdd form, e.g. 19850423."
+        data_tests: [unique, not_null]
+      - name: date_day
+        description: "The calendar date."
+        data_tests: [unique, not_null]
+      - name: month_of_year
+        description: "1-12."
+        data_tests: [not_null]
+      - name: month_name
+        data_tests: [not_null]
+
+  - name: dim_sighting_profile
+    description: "Junk dimension: every combination (2 x 2 x 2 = 8) of the three yes/no observations armed / hat / jacket."
+    columns:
+      - name: sighting_profile_skey
+        data_tests: [unique, not_null]
+      - name: has_weapon
+        description: "Was the perpetrator observed to be armed?"
+        data_tests: [not_null]
+      - name: has_hat
+        description: "Was the perpetrator wearing a hat?"
+        data_tests: [not_null]
+      - name: has_jacket
+        description: "Was the perpetrator wearing a jacket?"
+        data_tests: [not_null]
+      - name: profile_description
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [has_weapon, has_hat, has_jacket]
+
+  - name: dim_region
+    description: "The eight Interpol regions (one per workbook sheet)."
+    columns:
+      - name: region_skey
+        description: "Surrogate key."
+        data_tests: [unique, not_null]
+      - name: region_name
+        description: "Region name as given by the sheet (e.g. EUROPE)."
+        data_tests: [unique, not_null]
+
+  - name: dim_agency
+    description: "Interpol agency HQs. Each belongs to exactly one region."
+    columns:
+      - name: agency_skey
+        description: "Surrogate key."
+        data_tests: [unique, not_null]
+      - name: region_skey
+        description: "FK to dim_region."
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('dim_region'), field: region_skey}}
+      - name: hq_city
+        description: "HQ city where field agents file reports."
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [region_skey, hq_city]
+
+  - name: dim_agent
+    description: "Field agents who file reports (keyed on name)."
+    columns:
+      - name: agent_skey
+        data_tests: [unique, not_null]
+      - name: agent_name
+        data_tests: [unique, not_null]
+
+  - name: dim_witness
+    description: "Witnesses who saw the perpetrator (keyed on name)."
+    columns:
+      - name: witness_skey
+        data_tests: [unique, not_null]
+      - name: witness_name
+        data_tests: [unique, not_null]
+
+  - name: dim_country
+    description: "Countries of sightings (ISO-style codes as supplied)."
+    columns:
+      - name: country_skey
+        data_tests: [unique, not_null]
+      - name: country_code
+        data_tests: [unique, not_null]
+
+  - name: dim_location
+    description: "City + coordinates of a sighting, inside a country."
+    columns:
+      - name: location_skey
+        data_tests: [unique, not_null]
+      - name: country_skey
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('dim_country'), field: country_skey}}
+      - name: city
+        data_tests: [not_null]
+      - name: latitude
+        data_tests: [not_null]
+      - name: longitude
+        data_tests: [not_null]
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [country_skey, city, latitude, longitude]
+
+  - name: dim_behavior
+    description: "Distinct short descriptions of perpetrator behavior."
+    columns:
+      - name: behavior_skey
+        data_tests: [unique, not_null]
+      - name: behavior_name
+        data_tests: [unique, not_null]
+
+  - name: fact_sighting
+    description: "One row per field-agent report of a sighting."
+    columns:
+      - name: sighting_skey
+        description: "Unique primary key of sighting event."
+        data_tests: [unique, not_null]
+      - name: witness_date_skey
+        description: "FK to dim_date: the day the witness saw the perpetrator."
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('dim_date'), field: date_skey}}
+      - name: agent_date_skey
+        description: "FK to dim_date: the day the field agent filed the report."
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('dim_date'), field: date_skey}}
+      - name: witness_skey
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('dim_witness'), field: witness_skey}}
+      - name: agent_skey
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('dim_agent'), field: agent_skey}}
+      - name: agency_skey
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('dim_agency'), field: agency_skey}}
+      - name: location_skey
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('dim_location'), field: location_skey}}
+      - name: behavior_skey
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('dim_behavior'), field: behavior_skey}}
+      - name: sighting_profile_skey
+        description: "FK to dim_sighting_profile: the armed / hat / jacket combination observed."
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('dim_sighting_profile'), field: sighting_profile_skey}}

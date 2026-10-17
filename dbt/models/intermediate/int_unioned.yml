@@ -4,7 +4,7 @@ models:
   - name: int_unioned
     columns:
       - name: sighting_id
-        description: "Unique primary key of dataset"
+        description: "Unique primary key of sighting event"
         data_type: varchar 
         data_tests: [unique,not_null]
       - name: date_witness
