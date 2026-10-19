@@ -10,7 +10,8 @@ with f as (select * from {{ ref('fact_sighting') }})
         d.month_of_year       as month_num,
         d.month_name          as month_name,
         r.region_name,
-        count(*)              as sightings
+        count(*)              as sightings,
+        
     from f
         inner join d  on d.date_skey    = f.witness_date_skey
         inner join ag on ag.agency_skey = f.agency_skey
@@ -22,6 +23,8 @@ select
     month_num,
     month_name,
     region_name,
-    sightings
+    sightings,
+    sum(sightings) over (partition by month_num)                   as month_total,
+    sightings * 1.0 / sum(sightings) over (partition by month_num) as probability
 from counts
 order by month_num

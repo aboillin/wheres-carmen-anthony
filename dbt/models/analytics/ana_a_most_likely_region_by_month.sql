@@ -11,7 +11,9 @@ with rp as (select * from {{ ref('ana_a_region_probability_by_month') }})
 select
     month_name,
     region_name as most_likely_region,
-    sightings
+    sightings,
+    month_total,
+    probability
 from month_rnk
 where rnk = 1
 order by month_num

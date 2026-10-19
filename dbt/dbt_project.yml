@@ -1,7 +1,7 @@
-name: "wheres-carmen-anthony"
+name: "wheres_carmen_anthony"
 version: "1.0.0"
 
-profile: carmen-anthony
+profile: carmen_anthony
 
 model-paths: ["models"]
 seed-paths: ["seeds"]
@@ -11,12 +11,12 @@ macro-paths: ["macros"]
 clean-targets: ["target", "dbt_packages"]
 
 seeds:
-  wheres-carmen-anthony:
+  wheres_carmen_anthony:
     +schema: raw
     +quote_columns: true
 
 models:
-  wheres-carmen-anthony:
+  wheres_carmen_anthony:
     staging:
       +materialized: view
       +schema: staging
